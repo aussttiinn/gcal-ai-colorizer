@@ -1,8 +1,14 @@
 function onEventChange(event) {
-    // The event does not include information about the calendar events itself
-    Logger.log(JSON.stringify(event));
+    // set the trigger 
+    Trigger.calendarId=event["calendarId"];
+    Trigger.triggerUid=event["triggerUid"];
+    Trigger.authMode=event["authMode"];
+
+    main(event);
 }
 
-function main() {
-    // Actual core logic
+function main(event) {
+    Logger.log(JSON.stringify(Trigger));
+    lastUpdated = getLastEditedEvent();
+    Logger.log(JSON.stringify(lastUpdated));
 }
