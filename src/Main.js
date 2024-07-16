@@ -4,19 +4,18 @@ var Trigger = {
     authMode: null
 }
 
+/** 
+ * Maps an event category to a corresponding color in google calendar
+ * https://developers.google.com/apps-script/reference/calendar/event-color 
+ */
 var EventCategories = {
-    // Key: category, value: int representing a color in GoogleCalendar
     "Work": 1,
-    "Personal": 2,
-    "Family": 3,
-    "Fitness": 4,
-    "Health": 5,
-    "Education": 6,
-    "Travel": 7,
-    "Finance": 8,
-    "Social": 9,
-    "Hobbies": 10,
-    "Miscellaneous": 11
+    "Health": 6,
+    "Education": 3,
+    "Travel": 9,
+    "Finance": 10,
+    "Social": 2,
+    "Miscellaneous": 8
 };
 
 /**
