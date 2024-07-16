@@ -76,6 +76,26 @@ Follow these steps to set up and deploy the project using `clasp`:
 
     This command will push your local code to the Google Apps Script project and deploy it.
 
+6. **Create the Trigger through the Google Apps Script UI**
+
+    Go to the Google Apps Script Editor: https://script.google.com/d/<your-script-id>/edit (replace <your-script-id> with your actual script ID).
+    
+    Click on the clock icon in the toolbar to open the Triggers page.
+    
+    Click on "Add Trigger" in the bottom-right corner.
+    
+    Set up the trigger with the following settings:
+    
+    Choose which function to run: onEventChange
+    
+    Select event source: From calendar
+    
+    Select type of time-based trigger: On event updated
+    
+    Select calendar: Your calendar ID
+    
+    Click "Save" to create the trigger.
+
 ### Project Structure
 
 The source code for the project is located in the `src` directory. The Makefile includes several commands to help manage the project:

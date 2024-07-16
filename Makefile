@@ -8,6 +8,6 @@ install:
 	npm install -g @google/clasp
 
 .PHONY: deploy
-deploy: js
+deploy: 
 	clasp push
 	@echo "Project deployed using clasp"

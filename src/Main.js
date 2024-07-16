@@ -53,23 +53,3 @@ function onEventChange(event) {
         Logger.log("Invalid response received: " + JSON.stringify(response));
     }
 }
-
-/**
- * Validates the response from the OpenAI API.
- *
- * @param {Object} response - The response object from the OpenAI API.
- * @returns {boolean} - True if the response is valid, false otherwise.
- */
-function isValid(response) {
-    if (response.hasOwnProperty("category")) {
-        if (EventCategories.hasOwnProperty(response.category)) {
-            return true;
-        } else {
-            Logger.log("Invalid category in response: " + response.category);
-            return false;
-        }
-    } else {
-        Logger.log("Response does not have 'category' property.");
-        return false;
-    }
-}
