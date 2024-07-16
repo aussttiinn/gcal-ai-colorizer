@@ -5,6 +5,7 @@ var Trigger = {
 }
 
 var EventCategories = {
+    // Key: category, value: int representing a color in GoogleCalendar
     "Work": 1,
     "Personal": 2,
     "Family": 3,

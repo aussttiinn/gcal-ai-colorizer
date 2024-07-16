@@ -45,6 +45,7 @@ function getOpenAIKey() {
 
 /**
  * Calls the OpenAI API with the given payload and returns the response.
+ * Check out privacy policy here: https://openai.com/policies/privacy-policy/ 
  *
  * @param {Object} payload - The payload object to be sent to the OpenAI API.
  * @returns {Object} - The response object from the OpenAI API.
