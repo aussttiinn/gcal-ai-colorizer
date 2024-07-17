@@ -13,7 +13,7 @@ function getOptions(pageToken) {
         updatedMin: earlier.toISOString(),
         maxResults: 50,
         orderBy: 'updated',
-        singleEvents: true,
+        singleEvents: false,
         showDeleted: false
     };
 
@@ -30,7 +30,7 @@ function getOptions(pageToken) {
  * @returns {CalendarEvent} - The last edited calendar event. https://developers.google.com/apps-script/reference/calendar/calendar-event 
  * @throws {Error} - Throws an error if no events are found or if the iteration count exceeds the maximum allowed.
  */
-function getLastEditedEvent() {
+function getLastEditedEvent(skipAlreadyEdited) {
     Logger.log("Retrieving the last edited calendar event.");
 
     var calendarId = Session.getActiveUser().getEmail();
@@ -51,7 +51,7 @@ function getLastEditedEvent() {
         pageToken = events.nextPageToken || null;
         Logger.log(`PageToken: ${pageToken}`);
         iterationCount++;
-    } while (pageToken && iterationCount <= maxIterations); // For some reason it will keep going
+    } while (pageToken && iterationCount <= maxIterations); // TODO: we should not need a max iterations.
 
     // Check if no events were found
     if (allEvents.length === 0) {
@@ -60,7 +60,7 @@ function getLastEditedEvent() {
     } else {
         Logger.log("Events found.");
         // Sort events by updated time to get the most recently updated one
-        allEvents.sort(function(a, b) {
+        allEvents.sort(function (a, b) {
             return new Date(b.updated) - new Date(a.updated);
         });
         var lastEvent = allEvents[0];

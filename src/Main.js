@@ -32,8 +32,12 @@ function onEventChange(event) {
     Trigger.authMode = event["authMode"];
     Logger.log("Trigger updated with event details.");
 
-    // Get the last edited event
+    // Get the last edited event, exit the function if we've edited this event before
     lastUpdatedEvent = getLastEditedEvent();
+    if (lastUpdatedEvent.getTag("category")) {
+        Logger.log(`Has the tag ${lastUpdatedEvent.getTag("category")}`)
+        return; 
+    } 
 
     // Call OpenAI API to categorize the event
     var response = callOpenAI(getPayload(lastUpdatedEvent));
@@ -47,6 +51,7 @@ function onEventChange(event) {
             Logger.log("Recurring event series retrieved.");
         }
         lastUpdatedEvent.setColor(EventCategories[category]);
+        lastUpdatedEvent.setTag("category", category);
         Logger.log("Event color set to: " + EventCategories[category]);
     } else {
         Logger.log("Invalid response received: " + JSON.stringify(response));
