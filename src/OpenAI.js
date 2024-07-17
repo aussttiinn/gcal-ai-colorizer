@@ -36,7 +36,7 @@ function getPayload(event) {
 
 /**
  * Retrieves the OpenAI API key from the script properties.
- *
+ * Requires the property "OPENAI_API_KEY" set in script settings
  * @returns {string} - The OpenAI API key.
  */
 function getOpenAIKey() {
