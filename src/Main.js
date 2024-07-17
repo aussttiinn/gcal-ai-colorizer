@@ -4,19 +4,18 @@ var Trigger = {
     authMode: null
 }
 
+/** 
+ * Maps an event category to a corresponding color in google calendar
+ * https://developers.google.com/apps-script/reference/calendar/event-color 
+ */
 var EventCategories = {
-    // Key: category, value: int representing a color in GoogleCalendar
-    "Work": 1,
-    "Personal": 2,
-    "Family": 3,
-    "Fitness": 4,
-    "Health": 5,
-    "Education": 6,
-    "Travel": 7,
-    "Finance": 8,
-    "Social": 9,
-    "Hobbies": 10,
-    "Miscellaneous": 11
+    "Work": 5,
+    "Health": 6,
+    "Education": 9,
+    "Travel": 3,
+    "Finance": 10,
+    "Social": 7,
+    "Miscellaneous": 8
 };
 
 /**
@@ -33,8 +32,12 @@ function onEventChange(event) {
     Trigger.authMode = event["authMode"];
     Logger.log("Trigger updated with event details.");
 
-    // Get the last edited event
+    // Get the last edited event, exit the function if we've edited this event before
     lastUpdatedEvent = getLastEditedEvent();
+    if (lastUpdatedEvent.getTag("category")) {
+        Logger.log(`Has the tag ${lastUpdatedEvent.getTag("category")}`)
+        return; 
+    } 
 
     // Call OpenAI API to categorize the event
     var response = callOpenAI(getPayload(lastUpdatedEvent));
@@ -48,6 +51,7 @@ function onEventChange(event) {
             Logger.log("Recurring event series retrieved.");
         }
         lastUpdatedEvent.setColor(EventCategories[category]);
+        lastUpdatedEvent.setTag("category", category);
         Logger.log("Event color set to: " + EventCategories[category]);
     } else {
         Logger.log("Invalid response received: " + JSON.stringify(response));

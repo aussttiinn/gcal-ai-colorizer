@@ -78,23 +78,23 @@ Follow these steps to set up and deploy the project using `clasp`:
 
 6. **Create the Trigger through the Google Apps Script UI**
 
-    Go to the Google Apps Script Editor: https://script.google.com/d/<your-script-id>/edit (replace <your-script-id> with your actual script ID).
-    
-    Click on the clock icon in the toolbar to open the Triggers page.
-    
-    Click on "Add Trigger" in the bottom-right corner.
-    
-    Set up the trigger with the following settings:
-    
-    Choose which function to run: onEventChange
-    
-    Select event source: From calendar
-    
-    Select type of time-based trigger: On event updated
-    
-    Select calendar: Your calendar ID
-    
-    Click "Save" to create the trigger.
+    - Go to the Google Apps Script Editor: `https://script.google.com/d/<your-script-id>/edit` (replace `<your-script-id>` with your actual script ID).
+    - Click on the clock icon in the toolbar to open the Triggers page.
+    - Click on "Add Trigger" in the bottom-right corner.
+    - Set up the trigger with the following settings:
+        - Choose which function to run: `onEventChange`
+        - Select event source: `From calendar`
+        - Select type of time-based trigger: `On event updated`
+        - Select calendar: `Your calendar ID`
+    - Click "Save" to create the trigger.
+
+7. **Set the OpenAI API Key in Script Properties**
+
+    - Go to the Google Apps Script Editor: `https://script.google.com/d/<your-script-id>/edit` (replace `<your-script-id>` with your actual script ID).
+    - Click on `Settings` -> `Script properties`.
+    - Click "Edit Script Properties"
+        - Key = "OPENAI_API_KEY"
+        - Value = the value of your api key given by openai
 
 ### Project Structure
 
