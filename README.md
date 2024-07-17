@@ -91,11 +91,10 @@ Follow these steps to set up and deploy the project using `clasp`:
 7. **Set the OpenAI API Key in Script Properties**
 
     - Go to the Google Apps Script Editor: `https://script.google.com/d/<your-script-id>/edit` (replace `<your-script-id>` with your actual script ID).
-    - Click on `File` -> `Project properties`.
-    - Navigate to the `Script properties` tab.
-    - Click `Add row`.
-    - Set `Name` to `OPENAI_API_KEY` and `Value` to your actual OpenAI API key.
-    - Click `Save` to store the API key.
+    - Click on `Settings` -> `Script properties`.
+    - Click "Edit Script Properties"
+        - Key = "OPENAI_API_KEY"
+        - Value = the value of your api key given by openai
 
 ### Project Structure
 
