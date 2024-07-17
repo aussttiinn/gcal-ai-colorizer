@@ -9,12 +9,12 @@ var Trigger = {
  * https://developers.google.com/apps-script/reference/calendar/event-color 
  */
 var EventCategories = {
-    "Work": 1,
+    "Work": 5,
     "Health": 6,
-    "Education": 3,
-    "Travel": 9,
+    "Education": 9,
+    "Travel": 3,
     "Finance": 10,
-    "Social": 2,
+    "Social": 7,
     "Miscellaneous": 8
 };
 
