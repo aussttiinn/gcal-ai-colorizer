@@ -1,8 +1,8 @@
-# Project Name
+# Gcal-ai-colorizer 
+
+This project utilizes Google Apps Script to automate colorizing your google calendar using OpenAi. Using an onEventChange trigger in google calendar, the code will retrieve the last updated event, send the title/description to ChatGPT using your personal API Key, and determine a **category** and **color** for the event object. 
 
 ## Getting Started with Google Apps Script and `clasp`
-
-This project utilizes Google Apps Script to automate various tasks within Google Workspace. To manage and deploy the scripts, we use the `clasp` (Command Line Apps Script) tool.
 
 ### Prerequisites
 
