@@ -34,11 +34,14 @@ function isValid(response) {
 function callApi(lastUpdatedEvent){
     switch(APICONFIG.API_PROVIDER){
         case('GEMINI'):
-            return callGemini(getGeminiPayload(lastUpdatedEvent))
+            Logger.info('Calling gemini api...');
+            return callGemini(getGeminiPayload(lastUpdatedEvent));
         case('OPENAI'):
-            return callOpenAI(getOpenAIPayload(lastUpdatedEvent))
+            Logger.info('Calling openai api...');
+            return callOpenAI(getOpenAIPayload(lastUpdatedEvent));
         default:
-            throw new Error(`Unexpected API provider: ${APICONFIG.API_PROVIDER}`)
+            Logger.error('Unexpected api provider.'+APICONFIG.API_PROVIDER);
+            throw new Error(`Unexpected API provider: ${APICONFIG.API_PROVIDER}`);
     }
 }
 
@@ -48,36 +51,46 @@ function callApi(lastUpdatedEvent){
  * @param {Object} event - The event object containing information about the calendar event change.
  */
 function onEventChange(event) {
-    Logger.log("Event change detected: " + JSON.stringify(event));
+    var lock = LockService.getScriptLock();
+    if (!lock.tryLock(5000)) return;
 
-    // Update the Trigger object with event details
-    Trigger.calendarId = event["calendarId"];
-    Trigger.triggerUid = event["triggerUid"];
-    Trigger.authMode = event["authMode"];
-    Logger.log("Trigger updated with event details.");
+    // Wait 500ms to let previous executions finish
+    Utilities.sleep(500); 
+    
+    try {
+        Logger.log("Event change detected: " + JSON.stringify(event));
+        
+        // Update the Trigger object with event details
+        Trigger.calendarId = event["calendarId"];
+        Trigger.triggerUid = event["triggerUid"];
+        Trigger.authMode = event["authMode"];
+        Logger.log("Trigger updated with event details.");
 
-    // Get the last edited event, exit the function if we've edited this event before
-    lastUpdatedEvent = getLastEditedEvent();
-    if (lastUpdatedEvent.getTag("category")) {
-        Logger.log(`Has the tag ${lastUpdatedEvent.getTag("category")}`)
-        return; 
-    } 
+        // Get the last edited event, exit the function if we've edited this event before
+        lastUpdatedEvent = getLastEditedEvent();
+        if (lastUpdatedEvent.getTag("category")) {
+            Logger.log(`Has the tag ${lastUpdatedEvent.getTag("category")}. Exiting script.`)
+            return; 
+        } 
 
-    // Call OpenAI API to categorize the event
-    var response = callOpenAI(getPayload(lastUpdatedEvent));
-    Logger.log("OpenAI API response: " + JSON.stringify(response));
+        // Call OpenAI API to categorize the event
+        var response = callApi(lastUpdatedEvent);
+        Logger.log("OpenAI API response: " + JSON.stringify(response));
 
-    // Validate the response and update the event color if valid
-    if (isValid(response)) {
-        var category = response.category;
-        if (lastUpdatedEvent.isRecurringEvent()) {
-            lastUpdatedEvent = lastUpdatedEvent.getEventSeries();
-            Logger.log("Recurring event series retrieved.");
+        // Validate the response and update the event color if valid
+        if (isValid(response)) {
+            var category = response.category;
+            if (lastUpdatedEvent.isRecurringEvent()) {
+                lastUpdatedEvent = lastUpdatedEvent.getEventSeries();
+                Logger.log("Recurring event series retrieved.");
+            }
+            lastUpdatedEvent.setTag("category", category);
+            lastUpdatedEvent.setColor(EventCategories[category]);
+            Logger.log("Event color set to: " + EventCategories[category]);
+        } else {
+            Logger.log("Invalid response received: " + JSON.stringify(response));
         }
-        lastUpdatedEvent.setColor(EventCategories[category]);
-        lastUpdatedEvent.setTag("category", category);
-        Logger.log("Event color set to: " + EventCategories[category]);
-    } else {
-        Logger.log("Invalid response received: " + JSON.stringify(response));
+    } finally {
+        lock.releaseLock();
     }
 }
