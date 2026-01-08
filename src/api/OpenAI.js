@@ -4,7 +4,7 @@
  * @param {Object} event - The event object containing details of the calendar event.
  * @returns {Object} - The payload object to be sent to the OpenAI API.
  */
-function getPayload(event) {
+function getOpenAIPayload(event) {
     var systemcontent = `
         You are an assistant skilled in categorizing calendar events based on the following categories: ${Object.keys(EventCategories)}
     `;
@@ -17,7 +17,7 @@ function getPayload(event) {
     `;
 
     var payload = {
-        model: "gpt-3.5-turbo",
+        model: APICONFIG.OPENAI_MODEL_ID,
         messages: [
             {
                 role: "system",
@@ -35,15 +35,6 @@ function getPayload(event) {
 }
 
 /**
- * Retrieves the OpenAI API key from the script properties.
- * Requires the property "OPENAI_API_KEY" set in script settings
- * @returns {string} - The OpenAI API key.
- */
-function getOpenAIKey() {
-    return PropertiesService.getScriptProperties().getProperty('OPENAI_API_KEY');
-}
-
-/**
  * Calls the OpenAI API with the given payload and returns the response.
  * Check out privacy policy here: https://openai.com/policies/privacy-policy/ 
  *
@@ -53,14 +44,13 @@ function getOpenAIKey() {
  */
 function callOpenAI(payload) {
     Logger.log("Calling OpenAI API with payload: " + JSON.stringify(payload));
-
-    var apiKey = getOpenAIKey();
+    
     var url = 'https://api.openai.com/v1/chat/completions';
     var options = {
         method: 'post',
         contentType: 'application/json',
         headers: {
-            'Authorization': 'Bearer ' + apiKey
+            'Authorization': 'Bearer ' + APICONFIG.OPENAI_API_KEY
         },
         payload: JSON.stringify(payload)
     };
@@ -76,25 +66,5 @@ function callOpenAI(payload) {
     } catch (e) {
         Logger.log("Error calling OpenAI API: " + e.message);
         throw new Error("Failed to call OpenAI API");
-    }
-}
-
-/**
- * Validates the response from the OpenAI API.
- *
- * @param {Object} response - The response object from the OpenAI API.
- * @returns {boolean} - True if the response is valid, false otherwise.
- */
-function isValid(response) {
-    if (response.hasOwnProperty("category")) {
-        if (EventCategories.hasOwnProperty(response.category)) {
-            return true;
-        } else {
-            Logger.log("Invalid category in response: " + response.category);
-            return false;
-        }
-    } else {
-        Logger.log("Response does not have 'category' property.");
-        return false;
     }
 }

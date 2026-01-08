@@ -4,7 +4,7 @@
  * @param {Object} event - The event object containing details of the calendar event.
  * @returns {Object} - The payload object to be sent to the Gemini API.
  */
-function getPayload(event) {
+function getGeminiPayload(event) {
     var systemcontent = `
         You are an assistant skilled in categorizing calendar events based on these categories: ${Object.keys(EventCategories).join(", ")}
     `;
@@ -33,14 +33,6 @@ function getPayload(event) {
     return payload;
 }
 
-/**
- * Retrieves the OpenAI API key from the script properties.
- * Requires the property "GEMINI_API_KEY" set in script settings
- * @returns {string} - The Gemini API Key.
- */
-function getGeminiAPIKey() {
-    return PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
-}
 
 /**
  * Calls the Gemini API with the given payload and returns the response.
@@ -50,9 +42,7 @@ function getGeminiAPIKey() {
  * @throws {Error} - Throws an error if the API call fails.
  */
 function callGemini(payload) {
-    var apiKey = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
-    var modelId = "gemini-flash-lite-latest";
-    var url = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`;
+    var url = `https://generativelanguage.googleapis.com/v1beta/models/${APICONFIG.GEMINI_MODEL_ID}:generateContent?key=${APICONFIG.GEMINI_API_KEY}`;
 
     var options = {
         'method': 'post',
@@ -75,25 +65,5 @@ function callGemini(payload) {
     } catch (e) {
         Logger.log("Error: " + e.message);
         throw new Error("Failed to call Gemini API");
-    }
-}
-
-/**
- * Validates the response from the Gemini API.
- *
- * @param {Object} response - The response object from the Gemini API.
- * @returns {boolean} - True if the response is valid, false otherwise.
- */
-function isValid(response) {
-    if (response.hasOwnProperty("category")) {
-        if (EventCategories.hasOwnProperty(response.category)) {
-            return true;
-        } else {
-            Logger.log("Invalid category in response: " + response.category);
-            return false;
-        }
-    } else {
-        Logger.log("Response does not have 'category' property.");
-        return false;
     }
 }
