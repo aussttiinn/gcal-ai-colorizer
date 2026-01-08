@@ -10,3 +10,17 @@ const APICONFIG = {
     // Provider Switch
     API_PROVIDER: (PropertiesService.getScriptProperties().getProperty('API_PROVIDER') || 'GEMINI').toUpperCase(),
 };
+
+/** 
+ * Maps an event category to a corresponding color in google calendar
+ * https://developers.google.com/apps-script/reference/calendar/event-color 
+ */
+const EventCategories = {
+    "Work": 5,
+    "Health": 6,
+    "Education": 9,
+    "Travel": 3,
+    "Finance": 10,
+    "Social": 7,
+    "Miscellaneous": 8
+};
